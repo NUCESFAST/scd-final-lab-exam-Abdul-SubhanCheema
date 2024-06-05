@@ -1,0 +1,63 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - auth
+      - classrooms
+      - post
+      - event-bus
+
+  auth:
+    build:
+      context: ./Auth
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/auth_db
+    depends_on:
+      - mongo
+
+  classrooms:
+    build:
+      context: ./Classrooms
+    ports:
+      - "4001:4001"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/classrooms_db
+    depends_on:
+      - mongo
+
+  post:
+    build:
+      context: ./Post
+    ports:
+      - "4002:4002"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/post_db
+    depends_on:
+      - mongo
+
+  event-bus:
+    build:
+      context: ./event-bus
+    ports:
+      - "4009:4009"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"  # Changed host port to 27018
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

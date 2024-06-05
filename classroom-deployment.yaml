@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: classrooms-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: classrooms
+  template:
+    metadata:
+      labels:
+        app: classrooms
+    spec:
+      containers:
+        - name: classrooms-container
+          image: abdul303subhan/classrooms:latest
+          ports:
+            - containerPort: 3000
